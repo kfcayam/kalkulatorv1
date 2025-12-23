@@ -1,0 +1,171 @@
+<h1>VERO KALKULATOR</h1>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalkulator Android</title>
+
+<style>
+body{
+  margin:0;background:#000;color:#fff;
+  font-family:Roboto, Arial, sans-serif;
+}
+.calculator{
+  max-width:420px;margin:auto;height:100vh;
+  display:flex;flex-direction:column;
+}
+.display{padding:20px;text-align:right}
+.expr{font-size:20px;opacity:.7}
+.result{font-size:40px;margin-top:6px}
+
+.keys{
+  flex:1;background:#111;padding:10px;
+  display:grid;gap:8px;
+}
+button{
+  height:55px;background:#1c1c1c;color:white;
+  border:none;border-radius:10px;font-size:18px;
+}
+button:active{background:#333}
+.op{color:#3ddc84;font-size:22px}
+.equal{
+  background:#3ddc84;color:black;
+  grid-column:span 2;
+}
+.clear{color:#ff5f56}
+.small{font-size:14px;opacity:.8}
+
+/* Portrait */
+@media (orientation: portrait){
+  .keys{grid-template-columns:repeat(4,1fr)}
+  .scientific{display:none}
+}
+/* Landscape */
+@media (orientation: landscape){
+  .calculator{max-width:100%}
+  .keys{grid-template-columns:repeat(7,1fr)}
+  .scientific{display:block}
+}
+</style>
+</head>
+
+<body>
+<div class="calculator">
+
+  <div class="display">
+    <div class="expr" id="expr"></div>
+    <div class="result" id="result">0</div>
+  </div>
+
+  <div class="keys">
+    <!-- SCIENTIFIC -->
+    <button class="scientific small">INV</button>
+    <button class="scientific small">RAD</button>
+    <button class="scientific" onclick="fact()">x!</button>
+
+    <!-- BASIC -->
+    <button class="clear" onclick="clearAll()">C</button>
+    <button class="op" onclick="append('%')">%</button>
+    <button onclick="back()">⌫</button>
+    <button class="op" onclick="appendOp('/')">÷</button>
+
+    <button class="scientific" onclick="func('sin')">sin</button>
+    <button class="scientific" onclick="func('cos')">cos</button>
+    <button class="scientific" onclick="func('tan')">tan</button>
+
+    <button onclick="append('7')">7</button>
+    <button onclick="append('8')">8</button>
+    <button onclick="append('9')">9</button>
+    <button class="op" onclick="appendOp('*')">×</button>
+
+    <button class="scientific" onclick="func('ln')">ln</button>
+    <button class="scientific" onclick="func('log')">log</button>
+    <button class="scientific" onclick="append('**')">xʸ</button>
+
+    <button onclick="append('4')">4</button>
+    <button onclick="append('5')">5</button>
+    <button onclick="append('6')">6</button>
+    <button class="op" onclick="appendOp('-')">−</button>
+
+    <button class="scientific" onclick="append('Math.PI')">π</button>
+    <button class="scientific" onclick="append('Math.E')">e</button>
+    <button class="scientific" onclick="sqrt()">√</button>
+
+    <button onclick="append('1')">1</button>
+    <button onclick="append('2')">2</button>
+    <button onclick="append('3')">3</button>
+    <button class="op" onclick="appendOp('+')">+</button>
+
+    <button class="scientific"></button>
+    <button onclick="append('(')">(</button>
+    <button onclick="append(')')">)</button>
+    <button onclick="append('0')">0</button>
+    <button onclick="append('.')">.</button>
+    <button class="equal" onclick="calc()">=</button>
+  </div>
+</div>
+
+<script>
+let exp="";
+const expr=document.getElementById("expr");
+const res=document.getElementById("result");
+
+/* tampilkan simbol */
+function render(){
+  expr.textContent = exp
+    .replace(/\*/g,"×")
+    .replace(/\//g,"÷");
+}
+
+function append(v){
+  exp+=v;
+  render();
+}
+
+function appendOp(op){
+  exp+=op;
+  render();
+}
+
+function clearAll(){
+  exp="";
+  res.textContent="0";
+  render();
+}
+
+function back(){
+  exp=exp.slice(0,-1);
+  render();
+}
+
+function calc(){
+  try{
+    const r=eval(exp);
+    res.textContent=r.toString().replace('.',',');
+    exp=r.toString();
+    render();
+  }catch{
+    res.textContent="Error";
+  }
+}
+
+function func(f){
+  if(f==="sin") exp+="Math.sin(";
+  if(f==="cos") exp+="Math.cos(";
+  if(f==="tan") exp+="Math.tan(";
+  if(f==="ln") exp+="Math.log(";
+  if(f==="log") exp+="Math.log10(";
+  render();
+}
+
+function sqrt(){ exp+="Math.sqrt("; render(); }
+function fact(){ exp+="fact("; render(); }
+
+function fact(n){
+  if(n<=1) return 1;
+  return n*fact(n-1);
+}
+</script>
+</body>
+</html>
